@@ -53,6 +53,10 @@ QSPI_PACKER = ../scripts/fspi_packer.sh
 VERSION = v1
 endif
 
+ifeq ($(DTB),)
+DTB=fsl-$(PLAT)-evk.dtb
+endif
+
 FW_DIR = imx-boot/imx-boot-tools/$(PLAT)
 
 $(MKIMG): mkimage_imx8.c
@@ -95,9 +99,9 @@ u-boot-atf-tee.bin: u-boot.bin bl31.bin tee.bin
 
 .PHONY: clean
 clean:
-	@rm -f $(MKIMG) u-boot-atf.bin u-boot-atf-tee.bin u-boot-spl-ddr.bin u-boot.itb u-boot.its u-boot-ddr3l.itb u-boot-ddr3l.its u-boot-spl-ddr3l.bin u-boot-ddr4.itb u-boot-ddr4.its u-boot-spl-ddr4.bin u-boot-ddr4-evk.itb u-boot-ddr4-evk.its $(OUTIMG)
+	@rm -f $(MKIMG) u-boot-atf.bin u-boot-atf-tee.bin u-boot-spl-ddr.bin u-boot.itb u-boot.its u-boot-ddr3l.itb u-boot-ddr3l.its u-boot-spl-ddr3l.bin u-boot-ddr4.itb u-boot-ddr4.its u-boot-spl-ddr4.bin u-boot-ddr4-evk.itb u-boot-ddr4-evk.its *.bin *.dtb mkimage_uboot $(OUTIMG)
 
-dtbs = fsl-$(PLAT)-evk.dtb
+dtbs = ${DTB}
 u-boot.itb: $(dtbs)
 	./$(PAD_IMAGE) bl31.bin
 	TEE_LOAD_ADDR=$(TEE_LOAD_ADDR) ATF_LOAD_ADDR=$(ATF_LOAD_ADDR) ./mkimage_fit_atf.sh $(dtbs) > u-boot.its
