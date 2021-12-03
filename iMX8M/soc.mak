@@ -16,6 +16,10 @@ BITBUCKET_SERVER=https://bitbucket.sw.nxp.com
 DDR_FW_DIR=projects/IMX/repos/linux-firmware-imx/raw/firmware/ddr/synopsys
 PAD_IMAGE = ../scripts/pad_image.sh
 
+ifeq ($(DDR_SIZE),)
+DDR_SIZE=4G
+endif
+
 ifeq ($(SOC),iMX8MM)
 PLAT = imx8mm
 HDMI = no
@@ -44,7 +48,11 @@ else
 PLAT = imx8mq
 HDMI = yes
 SPL_LOAD_ADDR = 0x7E1000
+ifeq ($(DDR_SIZE),4G)
 TEE_LOAD_ADDR = 0xfe000000
+else ifeq ($(DDR_SIZE),2G)
+TEE_LOAD_ADDR = 0xbe000000
+endif
 ATF_LOAD_ADDR = 0x00910000
 VAL_BOARD = arm2
 #define the F(Q)SPI header file
